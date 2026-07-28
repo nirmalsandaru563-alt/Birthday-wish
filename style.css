@@ -28,6 +28,20 @@ body {
 .bar--top { top: 0; }
 .bar--bot { bottom: 0; }
 
+#animation-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+}
+
+canvas {
+    background: transparent;
+}
+
 .wish {
     position: absolute;
     left: 5.5%;
@@ -38,20 +52,12 @@ body {
     color: var(--ink);
     visibility: hidden;
     opacity: 0;
-    transition: opacity 1s ease, visibility 1s ease;
+    transition: opacity 1.2s ease, visibility 1.2s ease;
 }
 
 .wish.is-in {
     visibility: visible;
     opacity: 1;
-}
-
-.wish::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 1s;
 }
 
 .wish-content {
