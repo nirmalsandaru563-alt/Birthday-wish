@@ -20,7 +20,7 @@ body {
     right: 0;
     height: 16vh;
     background: #12040b;
-    z-index: 3;
+    z-index: 10;
     will-change: transform;
     pointer-events: none;
 }
@@ -35,48 +35,51 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 4;
+    z-index: 5;
 }
 
 canvas {
     background: transparent;
 }
 
+/* Full screen wish container starting hidden off-screen at the bottom */
 .wish {
     position: absolute;
-    left: 5.5%;
-    bottom: 10%;
-    max-width: 46%;
-    z-index: 6;
-    pointer-events: none;
-    color: var(--ink);
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 1.2s ease, visibility 1.2s ease;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #c9184a;
+    z-index: 8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(100%);
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+/* Class added via JS to pull it up into full view */
 .wish.is-in {
-    visibility: visible;
-    opacity: 1;
+    transform: translateY(0);
 }
 
 .wish-content {
-    background: #e62e6b;
-    padding: 40px;
-    border-radius: 8px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: var(--ink);
 }
 
 .subtitle {
-    font-size: 14px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    font-size: 16px;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
     font-style: italic;
+    opacity: 0.9;
 }
 
 h1 {
-    font-size: 48px;
+    font-size: 64px;
     margin: 0;
     line-height: 1.1;
+    font-weight: bold;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }

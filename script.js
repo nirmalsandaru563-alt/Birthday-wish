@@ -4,17 +4,26 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let arrowX = -100;
-let arrowY = canvas.height / 2 + 100;
-let targetX = canvas.width / 2;
-let targetY = canvas.height / 2;
-let arrowSpeed = 15;
+// Center positioning coordinates
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const heartSize = 100;
+
+// Arrow starting position (bottom-left)
+let arrowX = -50;
+let arrowY = canvas.height + 50;
+const targetX = centerX;
+const targetY = centerY;
+
+// Calculate precise angle towards the heart center
+const angle = Math.atan2(targetY - arrowY, targetX - arrowX);
+const speed = 18;
+
 let animationFinished = false;
 
-function drawHeart(x, y, size, alpha) {
+function drawHeart(x, y, size) {
     ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = "#e62e6b";
+    ctx.fillStyle = "#ff4d6d";
     ctx.beginPath();
     let d = size;
     ctx.moveTo(x, y + d / 4);
@@ -31,48 +40,54 @@ function drawHeart(x, y, size, alpha) {
     ctx.restore();
 }
 
-function drawArrow(x, y) {
+function drawArrow(x, y, currentAngle) {
     ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(currentAngle);
+    
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 3;
+    ctx.lineCap = "round";
     ctx.beginPath();
+    
     // Shaft
-    ctx.moveTo(x - 80, y + 40);
-    ctx.lineTo(x, y);
+    ctx.moveTo(-70, 0);
+    ctx.lineTo(10, 0);
     // Arrowhead
-    ctx.lineTo(x - 15, y - 5);
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - 5, y - 15);
+    ctx.lineTo(0, -8);
+    ctx.moveTo(10, 0);
+    ctx.lineTo(0, 8);
+    
     ctx.stroke();
     ctx.restore();
 }
 
-let heartSize = 120;
-let heartAlpha = 1;
-
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw target heart in the center
-    drawHeart(targetX - 60, targetY - 60, heartSize, heartAlpha);
+    // Draw the heart precisely at the absolute center
+    drawHeart(centerX - heartSize / 2, centerY - heartSize / 2, heartSize);
 
     if (!animationFinished) {
-        // Move arrow towards the heart
-        arrowX += arrowSpeed;
-        arrowY -= arrowSpeed * 0.5;
-        drawArrow(arrowX, arrowY);
+        // Move arrow along the calculated angle vector directly to center
+        arrowX += Math.cos(angle) * speed;
+        arrowY += Math.sin(angle) * speed;
+        
+        drawArrow(arrowX, arrowY, angle);
 
-        // Check collision point
-        if (arrowX >= targetX - 40) {
+        // Check if arrow reaches the center target zone
+        const distance = Math.hypot(targetX - arrowX, targetY - arrowY);
+        if (distance < 15) {
             animationFinished = true;
-            // Fade out canvas animation smoothly
-            canvas.style.transition = "opacity 1s";
+            
+            // Fade out the canvas quickly
+            canvas.style.transition = "opacity 0.4s ease";
             canvas.style.opacity = 0;
             
-            // Trigger the Birthday Wish Card popup
+            // Trigger the full-screen wish screen pulling up from the bottom
             setTimeout(() => {
                 document.querySelector('.wish').classList.add('is-in');
-            }, 500);
+            }, 300);
             return;
         }
     }
